@@ -11,3 +11,104 @@ For Developers
 ============
 
 You can also see [Java](https://github.com/starlangsoftware/ParseTree), [Python](https://github.com/starlangsoftware/ParseTree-Py), [Cython](https://github.com/starlangsoftware/ParseTree-Cy), [C#](https://github.com/starlangsoftware/ParseTree-CS), or [C++](https://github.com/starlangsoftware/ParseTree-CPP) repository.
+
+## Requirements
+
+* Xcode Editor
+* [Git](#git)
+
+### Git
+
+Install the [latest version of Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
+
+## Download Code
+
+In order to work on code, create a fork from GitHub page. 
+Use Git for cloning the code to your local or below line for Ubuntu:
+
+	git clone <your-fork-git-link>
+
+A directory called Util-Swift will be created. Or you can use below link for exploring the code:
+
+	git clone https://github.com/starlangsoftware/ParseTree-Swift.git
+
+## Open project with XCode
+
+To import projects from Git with version control:
+
+* XCode IDE, select Clone an Existing Project.
+
+* In the Import window, paste github URL.
+
+* Click Clone.
+
+Result: The imported project is listed in the Project Explorer view and files are loaded.
+
+
+## Compile
+
+**From IDE**
+
+After being done with the downloading and opening project, select **Build** option from **Product** menu. After compilation process, user can run ParseTree-Swift.
+
+Detailed Description
+============
+
++ [TreeBank](#treebank)
++ [ParseTree](#parsetree)
+
+## TreeBank
+
+To load a TreeBank composed of saved ParseTrees from a folder:
+
+	TreeBank(folder: String)
+
+To load trees with a specified pattern from a folder of trees: 
+
+	TreeBank(folder: String, pattern: String)
+	
+the line above is used. For example,
+
+	let a = TreeBank("/mypath")
+
+the line below is used to load trees under the folder "mypath" which is under the current folder. If only the trees with ".train" extension under the same folder are to be loaded:
+
+	let a = TreeBank("/mypath", ".train")
+
+To iterate over the trees after the TreeBank is loaded:
+
+	for i in 0..<a.size() {
+		let p = a.get(i)
+	}
+	
+a block of code like this can be useful.
+
+## ParseTree
+
+To load a saved ParseTree:
+
+	ParseTree(file: URL)
+	
+is used. Usually it is more useful to load a TreeBank as explained above than loading the ParseTree one by one.
+
+To find the node number of a ParseTree:
+
+	nodeCount()
+	
+leaf number of a ParseTree:
+
+	leafCount()
+	
+above methods can be used.
+
+# Cite
+
+	@INPROCEEDINGS{9259873,
+  	author={N. {Kara} and B. {Marşan} and M. {Özçelik} and B. N. {Arıcan} and A. {Kuzgun} and N. {Cesur} and D. B. {Aslan} and O. T. {Yıldız}},
+  	booktitle={2020 Innovations in Intelligent Systems and Applications Conference (ASYU)}, 
+  	title={Creating A Syntactically Felicitous Constituency Treebank For Turkish}, 
+  	year={2020},
+  	volume={},
+  	number={},
+  	pages={1-6},
+  	doi={10.1109/ASYU50717.2020.9259873}}
