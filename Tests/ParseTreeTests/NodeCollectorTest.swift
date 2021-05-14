@@ -31,7 +31,20 @@ final class NodeColectorTest: XCTestCase {
         nodeCollector1 = NodeCollector(rootNode: parseTree5.getRoot()!, condition: IsLeaf())
         XCTAssertEqual(4, nodeCollector1.collect().count)
     }
-    
+
+    func testCollectNode() {
+        var nodeCollector1 : NodeCollector = NodeCollector(rootNode: parseTree1.getRoot()!, condition: nil)
+        XCTAssertEqual(34, nodeCollector1.collect().count)
+        nodeCollector1 = NodeCollector(rootNode: parseTree2.getRoot()!, condition: nil)
+        XCTAssertEqual(39, nodeCollector1.collect().count)
+        nodeCollector1 = NodeCollector(rootNode: parseTree3.getRoot()!, condition: nil)
+        XCTAssertEqual(32, nodeCollector1.collect().count)
+        nodeCollector1 = NodeCollector(rootNode: parseTree4.getRoot()!, condition: nil)
+        XCTAssertEqual(28, nodeCollector1.collect().count)
+        nodeCollector1 = NodeCollector(rootNode: parseTree5.getRoot()!, condition: nil)
+        XCTAssertEqual(9, nodeCollector1.collect().count)
+    }
+
     func testCollectEnglish() {
         var nodeCollector1 : NodeCollector = NodeCollector(rootNode: parseTree1.getRoot()!, condition: IsEnglishLeaf())
         XCTAssertEqual(13, nodeCollector1.collect().count)

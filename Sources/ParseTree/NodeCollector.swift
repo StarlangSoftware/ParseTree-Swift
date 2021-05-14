@@ -9,7 +9,7 @@ import Foundation
 
 public class NodeCollector {
     
-    private var condition: NodeCondition
+    private var condition: NodeCondition? = nil
     private var rootNode: ParseNode
     
     /**
@@ -20,7 +20,7 @@ public class NodeCollector {
         - rootNode: Root node of the subtree
         - condition: The condition interface for which all nodes in the subtree rooted at rootNode will be checked
      */
-    public init(rootNode: ParseNode, condition: NodeCondition){
+    public init(rootNode: ParseNode, condition: NodeCondition?){
         self.condition = condition
         self.rootNode = rootNode
     }
@@ -32,12 +32,11 @@ public class NodeCollector {
         - collected: The {@link ArrayList} where the collected ParseNode's will be stored.
      */
     private func collectNodes(parseNode: ParseNode, collected: inout [ParseNode]){
-        if condition.satisfies(parseNode: parseNode) {
+        if condition == nil || condition!.satisfies(parseNode: parseNode) {
             collected.append(parseNode)
-        } else {
-            for i in 0..<parseNode.numberOfChildren() {
-                collectNodes(parseNode: parseNode.getChild(i: i), collected: &collected)
-            }
+        }
+        for i in 0..<parseNode.numberOfChildren() {
+            collectNodes(parseNode: parseNode.getChild(i: i), collected: &collected)
         }
     }
     
