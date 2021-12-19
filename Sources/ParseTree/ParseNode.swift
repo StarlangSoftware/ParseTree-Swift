@@ -650,7 +650,11 @@ public class ParseNode{
     public func moveRight(node: ParseNode){
         for i in 0..<children!.count {
             if children?[i] === node {
-                children!.swapAt(i, (i + 1) % children!.count)
+                if i == children!.count - 1{
+                    children!.swapAt(0, children!.count - 1)
+                } else {
+                    children!.swapAt(i, (i + 1) % children!.count)
+                }
                 return
             }
         }
