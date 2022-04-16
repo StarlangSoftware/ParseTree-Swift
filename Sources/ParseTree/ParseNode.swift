@@ -518,7 +518,7 @@ open class ParseNode{
      * Accessor for the data attribute.
      - Returns: Data of this node.
      */
-    public func getData() -> Symbol?{
+    open func getData() -> Symbol?{
         return data
     }
 
@@ -527,7 +527,7 @@ open class ParseNode{
      - Parameters:
         - data: Data to be set.
      */
-    public func setData(data: Symbol){
+    open func setData(data: Symbol){
         self.data = data
     }
     
@@ -559,7 +559,7 @@ open class ParseNode{
      * Returns true if this node does not contain a meaningful data, false otherwise.
      - Returns: true if this node does not contain a meaningful data, false otherwise.
      */
-    public func isDummyNode() -> Bool{
+    open func isDummyNode() -> Bool{
         return getData()!.getName().contains("*") || (getData()!.getName() == "0" && parent!.getData()!.getName() == "-NONE-")
     }
     
@@ -591,7 +591,7 @@ open class ParseNode{
      * Recursive function to convert the subtree rooted at this node to a string.
      - Returns: A string which contains all words in the subtree rooted at this node.
      */
-    public func description() -> String{
+    open func description() -> String{
         if children!.count < 2 {
             if children!.count < 1 {
                 return getData()!.getName()
@@ -611,7 +611,7 @@ open class ParseNode{
      * Recursive function to concatenate the data of the all ascendant nodes of this node to a string.
      - Returns: A string which contains all data of all the ascendant nodes of this node.
      */
-    public func ancestorString() -> String{
+    open func ancestorString() -> String{
         if parent == nil{
             return (data?.getName())!
         } else {
