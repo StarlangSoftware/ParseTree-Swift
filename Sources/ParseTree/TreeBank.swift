@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class TreeBank {
+open class TreeBank {
     
     public var parseTrees : [ParseTree] = []
     

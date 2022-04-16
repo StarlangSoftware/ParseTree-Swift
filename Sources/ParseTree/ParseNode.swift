@@ -8,7 +8,7 @@
 import Foundation
 import Dictionary
 
-public class ParseNode{
+open class ParseNode{
     
     public var children: [ParseNode]? = nil
     public var parent: ParseNode? = nil

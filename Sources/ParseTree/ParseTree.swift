@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class ParseTree{
+open class ParseTree{
     
     private static var sentenceLabels : [String] = ["SINV", "SBARQ", "SBAR", "SQ", "S"]
     public var root: ParseNode? = nil
