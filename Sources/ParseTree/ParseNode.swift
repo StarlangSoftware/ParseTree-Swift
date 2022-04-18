@@ -8,7 +8,7 @@
 import Foundation
 import Dictionary
 
-open class ParseNode{
+open class ParseNode : Equatable{
     
     public var children: [ParseNode]? = nil
     public var parent: ParseNode? = nil
@@ -49,6 +49,19 @@ open class ParseNode{
     public init(){
     }
 
+    public static func == (lhs: ParseNode, rhs: ParseNode) -> Bool {
+        if lhs.description() != rhs.description(){
+            return false
+        }
+        if lhs.numberOfChildren() != rhs.numberOfChildren(){
+            return false
+        }
+        if lhs.ancestorString() != rhs.ancestorString(){
+            return false
+        }
+        return true
+    }
+    
     /**
      * Constructs a ParseNode from a single line. If the node is a leaf node, it only sets the data. Otherwise, splits
      * the line w.r.t. spaces and paranthesis and calls itself resursively to generate its child parseNodes.
