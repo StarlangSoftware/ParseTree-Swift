@@ -26,8 +26,7 @@ open class TreeBank {
         do {
             let listOfFiles = try fileManager.contentsOfDirectory(atPath: folder)
             for file in listOfFiles {
-                let thisSourceFile = URL(fileURLWithPath: #file)
-                let thisDirectory = thisSourceFile.deletingLastPathComponent()
+                let thisDirectory = URL(fileURLWithPath: folder)
                 let url = thisDirectory.appendingPathComponent(file)
                 let parseTree = ParseTree(url: url)
                 if parseTree.getRoot() != nil{
@@ -52,8 +51,7 @@ open class TreeBank {
             let listOfFiles = try fileManager.contentsOfDirectory(atPath: folder)
             for file in listOfFiles {
                 if file.contains(pattern){
-                    let thisSourceFile = URL(fileURLWithPath: #file)
-                    let thisDirectory = thisSourceFile.deletingLastPathComponent()
+                    let thisDirectory = URL(fileURLWithPath: folder)
                     let url = thisDirectory.appendingPathComponent(file)
                     let parseTree = ParseTree(url: url)
                     if parseTree.getRoot() != nil{
@@ -80,6 +78,20 @@ open class TreeBank {
      */
     public func size() -> Int{
         return parseTrees.count
+    }
+    
+    /**
+     * Calls recursive function to count the number of words in the treeBank.
+     - Parameters:
+        - excludeStopWords If true, stop words are not counted.
+     - Returns: Number of words in the treeBank.
+     */
+    public func wordCount(excludeStopWords: Bool) -> Int{
+        var count = 0
+        for tree in parseTrees{
+            count = count + tree.wordCount(excludeStopWords: excludeStopWords)
+        }
+        return count
     }
     
     /**

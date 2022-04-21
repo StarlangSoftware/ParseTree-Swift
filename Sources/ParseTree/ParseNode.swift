@@ -545,6 +545,48 @@ open class ParseNode : Equatable{
     }
     
     /**
+     * Recursive function to count the number of words in the subtree rooted at this node.
+     - Parameters:
+        - excludeStopWords If true, stop words are not counted.
+     - Returns: Number of words in the subtree rooted at this node.
+     */
+    public func wordCount(excludeStopWords: Bool) -> Int{
+        var sum = 0
+        if children?.count == 0{
+            if !excludeStopWords{
+                sum = 1
+            } else {
+                if Word.isPunctuationSymbol(surfaceForm: (data?.getName())!) || (data?.getName())!.contains("*") || data?.getName().lowercased() == "at" ||
+                    data?.getName().lowercased() == "the" || data?.getName().lowercased() == "to" || data?.getName().lowercased() == "a" ||
+                    data?.getName().lowercased() == "an" || data?.getName().lowercased() == "not" || data?.getName().lowercased() == "is" ||
+                    data?.getName().lowercased() == "was" || data?.getName().lowercased() == "were" || data?.getName().lowercased() == "have" ||
+                    data?.getName().lowercased() == "had" || data?.getName().lowercased() == "has" || data?.getName().lowercased() == "by" ||
+                    data?.getName().lowercased() == "on" || data?.getName().lowercased() == "off" || data?.getName().lowercased() == "'s" ||
+                    data?.getName().lowercased() == "n't" || data?.getName().lowercased() == "can" || data?.getName().lowercased() == "could" ||
+                    data?.getName().lowercased() == "may" || data?.getName().lowercased() == "might" || data?.getName().lowercased() == "will" ||
+                    data?.getName().lowercased() == "would" || data?.getName().lowercased() == "as" || data?.getName().lowercased() == "with" ||
+                    data?.getName().lowercased() == "for" || data?.getName().lowercased() == "will" || data?.getName().lowercased() == "would" ||
+                    data?.getName().lowercased() == "than" || data?.getName().lowercased() == "$" || data?.getName().lowercased() == "and" ||
+                    data?.getName().lowercased() == "or" || data?.getName().lowercased() == "of" || data?.getName().lowercased() == "are" ||
+                    data?.getName().lowercased() == "be" || data?.getName().lowercased() == "been" || data?.getName().lowercased() == "do" ||
+                    data?.getName().lowercased() == "few" || data?.getName().lowercased() == "there" || data?.getName().lowercased() == "up" ||
+                    data?.getName().lowercased() == "down" || data?.getName().lowercased() == "in" || data?.getName().lowercased() == "'re"{
+                    sum = 0
+                    
+                } else {
+                    sum = 1
+                }
+            }
+        } else {
+            sum = 0
+        }
+        for aChild in children!{
+            sum = sum + aChild.wordCount(excludeStopWords: excludeStopWords)
+        }
+        return sum
+    }
+    
+    /**
      * Construct recursively the constituent span list of a subtree rooted at this node.
      - Parameters:
         - startIndex: Start index of the leftmost leaf node of this subtree.

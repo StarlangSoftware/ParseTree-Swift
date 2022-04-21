@@ -157,4 +157,14 @@ open class ParseTree{
     public func toSentence() -> String{
         return (root?.toSentence().trimmingCharacters(in: .whitespacesAndNewlines))!
     }
+    
+    /**
+     * Calls recursive function to count the number of words in the tree.
+     - Parameters:
+        - excludeStopWords If true, stop words are not counted.
+     - Returns: Number of words in the tree.
+     */
+    public func wordCount(excludeStopWords: Bool) -> Int{
+        return (root?.wordCount(excludeStopWords: excludeStopWords))!
+    }
 }
