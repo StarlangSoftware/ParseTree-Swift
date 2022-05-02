@@ -10,7 +10,7 @@ import Dictionary
 
 open class ParseNode : Equatable{
     
-    public var children: [ParseNode]? = nil
+    public var children: [ParseNode] = []
     public var parent: ParseNode? = nil
     public var data: Symbol? = nil
     
@@ -74,7 +74,6 @@ open class ParseNode : Equatable{
         var parenthesisCount : Int = 0
         var childLine : String = ""
         self.parent = parent
-        children = []
         if isLeaf {
             data = Symbol(name: line)
         } else {
@@ -82,7 +81,7 @@ open class ParseNode : Equatable{
             if line.firstIndex(of: ")") == line.lastIndex(of: ")") {
                 let start = line.index(line.firstIndex(of: " ")!, offsetBy: 1)
                 let end = line.firstIndex(of: ")")!
-                children!.append(ParseNode(parent: self, line: String(line[start..<end]), isLeaf: true))
+                children.append(ParseNode(parent: self, line: String(line[start..<end]), isLeaf: true))
             } else {
                 let emptyIndex = Int(line.distance(from: line.startIndex, to: line.firstIndex(of: " ")!))
                 for i in emptyIndex + 1..<line.count {
@@ -97,7 +96,7 @@ open class ParseNode : Equatable{
                         }
                     }
                     if parenthesisCount == 0 && childLine != "" {
-                        children!.append(ParseNode(parent: self, line: childLine.trimmingCharacters(in: .whitespacesAndNewlines), isLeaf: false))
+                        children.append(ParseNode(parent: self, line: childLine.trimmingCharacters(in: .whitespacesAndNewlines), isLeaf: false))
                         childLine = ""
                     }
                 }
@@ -114,10 +113,9 @@ open class ParseNode : Equatable{
         - data: Data for this node.
      */
     public init(left: ParseNode, right: ParseNode, data: Symbol){
-        children = []
-        children!.append(left)
+        children.append(left)
         left.parent = self
-        children!.append(right)
+        children.append(right)
         right.parent = self
         self.data = data
     }
@@ -130,8 +128,7 @@ open class ParseNode : Equatable{
         - data: Data for this node.
      */
     public init(left: ParseNode, data: Symbol){
-        children = []
-        children!.append(left)
+        children.append(left)
         left.parent = self
         self.data = data
     }
@@ -142,7 +139,6 @@ open class ParseNode : Equatable{
         - data: Data for this node.
      */
     public init(data: Symbol){
-        children = []
         self.data = data
     }
     
@@ -160,7 +156,7 @@ open class ParseNode : Equatable{
         switch direction{
             case SearchDirectionType.LEFT:
                 for item in priorityList {
-                    for child in children! {
+                    for child in children {
                         if child.getData()!.trimSymbol().getName() == item {
                             return child
                         }
@@ -171,9 +167,9 @@ open class ParseNode : Equatable{
                 }
             case SearchDirectionType.RIGHT:
                 for item in priorityList {
-                    var j : Int = children!.count - 1
+                    var j : Int = children.count - 1
                     while j >= 0 {
-                        let child = children![j]
+                        let child = children[j]
                         if child.getData()!.trimSymbol().getName() == item {
                             return child
                         }
@@ -194,7 +190,7 @@ open class ParseNode : Equatable{
      - Returns: Head node of the descendant leaves of this current node.
      */
     public func headLeaf() -> ParseNode?{
-        if children!.count > 0 {
+        if children.count > 0 {
             let head = headChild()
             if head != nil {
                 return head!.headLeaf()
@@ -303,7 +299,7 @@ open class ParseNode : Equatable{
         - child Child node to be added.
      */
     public func addChild(child: ParseNode){
-        children?.append(child)
+        children.append(child)
         child.parent = self
     }
     
@@ -311,7 +307,7 @@ open class ParseNode : Equatable{
      * Recursive method to restore the parents of all nodes below this node in the hierarchy.
      */
     public func correctParents(){
-        for child in children!{
+        for child in children{
             child.parent = self
             child.correctParents()
         }
@@ -324,7 +320,7 @@ open class ParseNode : Equatable{
         - child: Child node to be added.
      */
     public func addChild(index: Int, child: ParseNode){
-        children?.insert(child, at: index)
+        children.insert(child, at: index)
         child.parent = self
     }
     
@@ -335,7 +331,7 @@ open class ParseNode : Equatable{
         - child: Child node to be replaced.
      */
     public func setChild(index: Int, child: ParseNode){
-        children?[index] = child
+        children[index] = child
     }
     
     /**
@@ -344,9 +340,9 @@ open class ParseNode : Equatable{
         - child: Child node to be deleted.
      */
     public func removeChild(child: ParseNode){
-        for i in 0..<children!.count{
-            if children?[i] === child{
-                children?.remove(at: i)
+        for i in 0..<children.count{
+            if children[i] === child{
+                children.remove(at: i)
                 break
             }
         }
@@ -357,11 +353,11 @@ open class ParseNode : Equatable{
      - Returns: Number of all leaf nodes in the current subtree.
      */
     public func leafCount() -> Int{
-        if children!.count == 0{
+        if children.count == 0{
             return 1
         } else {
             var sum : Int = 0
-            for child in children!{
+            for child in children{
                 sum += child.leafCount()
             }
             return sum
@@ -373,9 +369,9 @@ open class ParseNode : Equatable{
      - Returns: Number of all nodes in the current subtree.
      */
     public func nodeCount() -> Int{
-        if children!.count > 0{
+        if children.count > 0{
             var sum : Int = 1
-            for child in children!{
+            for child in children{
                 sum += child.nodeCount()
             }
             return sum
@@ -390,9 +386,9 @@ open class ParseNode : Equatable{
      - Returns: Number of all nodes, which have more than one children, in the current subtree.
      */
     public func nodeCountWithMultipleChildren() -> Int{
-        if children!.count > 1{
+        if children.count > 1{
             var sum : Int = 1
-            for child in children!{
+            for child in children{
                 sum += child.nodeCountWithMultipleChildren()
             }
             return sum
@@ -405,8 +401,8 @@ open class ParseNode : Equatable{
      * Recursive method to remove all punctuation nodes from the current subtree.
      */
     public func stripPunctuation(){
-        children!.removeAll() {Word.isPunctuationSymbol(surfaceForm: $0.getData()!.getName())}
-        for child in children!{
+        children.removeAll() {Word.isPunctuationSymbol(surfaceForm: $0.getData()!.getName())}
+        for child in children{
             child.stripPunctuation()
         }
     }
@@ -416,7 +412,7 @@ open class ParseNode : Equatable{
      - Returns: Number of children of this node.
      */
     public func numberOfChildren() -> Int{
-        return children!.count
+        return children.count
     }
     
     /**
@@ -426,7 +422,7 @@ open class ParseNode : Equatable{
      - Returns: i'th child of this node.
      */
     public func getChild(i: Int) -> ParseNode{
-        return children![i]
+        return children[i]
     }
     
     /**
@@ -434,7 +430,7 @@ open class ParseNode : Equatable{
      - Returns: First child of this node.
      */
     public func firstChild() -> ParseNode{
-        return children!.first!
+        return children.first!
     }
     
     /**
@@ -442,7 +438,7 @@ open class ParseNode : Equatable{
      - Returns: Last child of this node.
      */
     public func lastChild() -> ParseNode{
-        return children!.last!
+        return children.last!
     }
     
     /**
@@ -463,7 +459,7 @@ open class ParseNode : Equatable{
      */
     public func getChildIndex(child: ParseNode) -> Int{
         var index: Int = 0
-        for child1 in children!{
+        for child1 in children{
             if child1 === child{
                 return index
             }
@@ -479,7 +475,7 @@ open class ParseNode : Equatable{
      - Returns: True if the given node is descendant of this node.
      */
     public func isDescendant(node: ParseNode) -> Bool{
-        for child in children!{
+        for child in children{
             if child === node{
                 return true
             } else {
@@ -497,9 +493,9 @@ open class ParseNode : Equatable{
      * node.
      */
     public func previousSibling() -> ParseNode?{
-        for i in 1..<parent!.children!.count{
-            if parent?.children![i] === self{
-                return parent?.children![i - 1]
+        for i in 1..<parent!.children.count{
+            if parent?.children[i] === self{
+                return parent?.children[i - 1]
             }
         }
         return nil
@@ -511,9 +507,9 @@ open class ParseNode : Equatable{
      * node.
      */
     public func nextSibling() -> ParseNode?{
-        for i in 0..<parent!.children!.count - 1{
-            if parent?.children![i] === self{
-                return parent?.children![i + 1]
+        for i in 0..<parent!.children.count - 1{
+            if parent?.children[i] === self{
+                return parent?.children[i + 1]
             }
         }
         return nil
@@ -552,7 +548,7 @@ open class ParseNode : Equatable{
      */
     public func wordCount(excludeStopWords: Bool) -> Int{
         var sum = 0
-        if children?.count == 0{
+        if children.count == 0{
             if !excludeStopWords{
                 sum = 1
             } else {
@@ -580,7 +576,7 @@ open class ParseNode : Equatable{
         } else {
             sum = 0
         }
-        for aChild in children!{
+        for aChild in children{
             sum = sum + aChild.wordCount(excludeStopWords: excludeStopWords)
         }
         return sum
@@ -593,11 +589,11 @@ open class ParseNode : Equatable{
         - list: Returned span list.
      */
     public func constituentSpanList(startIndex: Int, list: inout [ConstituentSpan]){
-        if children!.count > 0 {
+        if children.count > 0 {
             list.append(ConstituentSpan(constituent: data!, start: startIndex, end: startIndex + leafCount()))
         }
         var total : Int = 0
-        for parseNode in children! {
+        for parseNode in children {
             parseNode.constituentSpanList(startIndex: startIndex + total, list: &list)
             total += parseNode.leafCount()
         }
@@ -607,7 +603,7 @@ open class ParseNode : Equatable{
      - Returns: true if this node is leaf, false otherwise.
      */
     public func isLeaf() -> Bool{
-        return children!.count == 0
+        return children.count == 0
     }
     
     /**
@@ -623,7 +619,7 @@ open class ParseNode : Equatable{
      - Returns: A sentence which contains all words in the subtree rooted at this node.
      */
     public func toSentence() -> String{
-        if children!.count == 0 {
+        if children.count == 0 {
             if getData() != nil && !isDummyNode() {
                 return " " + getData()!.getName().replacingOccurrences(of: "-LRB-", with: "(").replacingOccurrences(of: "-RRB-", with: ")").replacingOccurrences(of: "-LSB-", with: "[").replacingOccurrences(of: "-RSB-", with: "]").replacingOccurrences(of: "-LCB-", with: "{").replacingOccurrences(of: "-RCB-", with: "}").replacingOccurrences(of: "-lrb-", with: "(").replacingOccurrences(of: "-rrb-", with: ")").replacingOccurrences(of: "-lsb-", with: "[").replacingOccurrences(of: "-rsb-", with: "]").replacingOccurrences(of: "-lcb-", with: "{").replacingOccurrences(of: "-rcb-", with: "}")
             } else {
@@ -635,7 +631,7 @@ open class ParseNode : Equatable{
             }
         } else {
             var st : String = ""
-            for aChild in children! {
+            for aChild in children {
                 st = st + aChild.toSentence()
             }
             return st
@@ -647,15 +643,15 @@ open class ParseNode : Equatable{
      - Returns: A string which contains all words in the subtree rooted at this node.
      */
     open func description() -> String{
-        if children!.count < 2 {
-            if children!.count < 1 {
+        if children.count < 2 {
+            if children.count < 1 {
                 return getData()!.getName()
             } else {
                 return "(" + data!.getName() + " " + firstChild().description() + ")"
             }
         } else {
             var st : String = "(" + data!.getName()
-            for aChild in children! {
+            for aChild in children {
                 st = st + " " + aChild.description()
             }
             return st + ") "
@@ -681,17 +677,17 @@ open class ParseNode : Equatable{
         - node: Node to be swapped.
      */
     public func moveLeft(node: ParseNode){
-        for i in 0..<children!.count {
-            if children?[i] === node {
+        for i in 0..<children.count {
+            if children[i] === node {
                 if i == 0 {
-                    children!.swapAt(0, children!.count - 1)
+                    children.swapAt(0, children.count - 1)
                 } else {
-                    children!.swapAt(i, (i - 1) % children!.count)
+                    children.swapAt(i, (i - 1) % children.count)
                 }
                 return
             }
         }
-        for aChild in children! {
+        for aChild in children {
             aChild.moveLeft(node: node)
         }
     }
@@ -703,17 +699,17 @@ open class ParseNode : Equatable{
         - node: Node to be swapped.
      */
     public func moveRight(node: ParseNode){
-        for i in 0..<children!.count {
-            if children?[i] === node {
-                if i == children!.count - 1{
-                    children!.swapAt(0, children!.count - 1)
+        for i in 0..<children.count {
+            if children[i] === node {
+                if i == children.count - 1{
+                    children.swapAt(0, children.count - 1)
                 } else {
-                    children!.swapAt(i, (i + 1) % children!.count)
+                    children.swapAt(i, (i + 1) % children.count)
                 }
                 return
             }
         }
-        for aChild in children! {
+        for aChild in children {
             aChild.moveRight(node: node)
         }
     }
