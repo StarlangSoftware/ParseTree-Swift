@@ -11,6 +11,7 @@ open class ParseTree{
     
     private static var sentenceLabels : [String] = ["SINV", "SBARQ", "SBAR", "SQ", "S"]
     public var root: ParseNode? = nil
+    public var name: String = ""
     
     /**
      * Empty constructor for ParseTree. Initializes the root node to null.
@@ -47,6 +48,14 @@ open class ParseTree{
         }
     }
     
+    public func setName(name: String){
+        self.name = name
+    }
+    
+    public func getName() -> String{
+        return name
+    }
+
     /**
      * Gets the next leaf node after the given leaf node in the ParseTree.
      - Parameters:

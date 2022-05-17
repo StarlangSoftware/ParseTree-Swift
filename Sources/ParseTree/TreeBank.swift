@@ -24,12 +24,14 @@ open class TreeBank {
     public init(folder: String){
         let fileManager = FileManager.default
         do {
-            let listOfFiles = try fileManager.contentsOfDirectory(atPath: folder)
+            var listOfFiles : [String] = try fileManager.contentsOfDirectory(atPath: folder)
+            listOfFiles.sort()
             for file in listOfFiles {
                 let thisDirectory = URL(fileURLWithPath: folder)
                 let url = thisDirectory.appendingPathComponent(file)
                 let parseTree = ParseTree(url: url)
                 if parseTree.getRoot() != nil{
+                    parseTree.setName(name: file)
                     parseTrees.append(parseTree)
                 }
             }
@@ -102,6 +104,10 @@ open class TreeBank {
      */
     public func get(index: Int) -> ParseTree{
         return parseTrees[index]
+    }
+    
+    public func  removeTree(index: Int){
+        parseTrees.remove(at: index)
     }
 
 }
